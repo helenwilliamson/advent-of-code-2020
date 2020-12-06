@@ -1,16 +1,14 @@
 (ns advent-of-code-2020.puzzle-1
   (:gen-class)
-  (:require [clojure.string :as str]))
+  (:require [clojure.string :as str]
+            [clojure.math.combinatorics :as combo]))
 
-(defn two-sum-to
-  [sum values]
-  (loop [data values]
-    (let [value (first data)
-          others (rest data)
-          match (filter #(= 2020 (+ value %)) others)]
-      (if (empty? match)
-        (recur others)
-        (* value (first match))))))
+(defn sum-to
+  [sum number-of-values values]
+  (->> (combo/combinations values number-of-values)
+       (filter #(= 2020 (reduce + %)))
+       (first)
+       (reduce *)))
 
 (defn read-input
   []
@@ -18,7 +16,7 @@
        (str/split-lines)
        (map #(Integer/parseInt %1))))
 
-(defn two-sum-to-2020
-  []
+(defn sum-to-2020
+  [number-of-values]
   (->> (read-input)
-      (two-sum-to 2020)))
+      (sum-to 2020 number-of-values)))
