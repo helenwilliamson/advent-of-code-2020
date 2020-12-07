@@ -15,7 +15,7 @@
         (mapv #(mapv vec (partition 2 %)))
         (map #(into {} %)))))
 
-(defn valid?
+(defn mandatory-fields?
   [passport]
   (= 7 (->> (keys passport)
             (into #{})
@@ -25,4 +25,4 @@
 
 (defn count-valid
   [passports]
-  (count (filter valid? passports)))
+  (count (filter mandatory-fields? passports)))
