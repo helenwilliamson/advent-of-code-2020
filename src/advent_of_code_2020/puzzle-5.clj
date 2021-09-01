@@ -35,3 +35,18 @@
        (map #(+ (* (row-number %1) 8) (column-number %1)))
        (sort >)
        first))
+
+(defn index-seats
+  [seat-numbers]
+  (map vector
+       (range (first seat-numbers) (+ (first seat-numbers) (count seat-numbers)))
+       seat-numbers))
+
+(defn version-2
+  []
+  (->> (read-input)
+       (map #(+ (* (row-number %1) 8) (column-number %1)))
+       (sort <)
+       (index-seats)
+       (filter #(not= (first %1) (second %1)))
+       ffirst))
