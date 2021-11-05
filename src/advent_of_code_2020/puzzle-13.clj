@@ -28,6 +28,25 @@
        first
        ((fn [{:keys [earliest-bus bus]}] (* bus (- earliest-bus earliest-departure))))))
 
+(defn bus-near
+  [value [bus-id bus-timetable]]
+  (let [next-bus (first (drop-while (partial > (+ value bus-id)) bus-timetable))]
+    (= (+ value bus-id) next-bus)))
+
+(defn find-adjacent-times
+  [[start & buses]]
+  (loop [[current & remaining] (second start)]
+    (if (or (> current 1068789) (every? #(bus-near current %1) buses))
+      current
+      (recur remaining))))
+
+(defn subsequent-minute
+  [{buses :buses}]
+  (->> (zipmap (iterate inc 0) buses)
+       (filter #(not= "x" (second %1)))
+       (map #(list (first %1) (iterate (partial + (Integer/parseInt (second %1))) 0)))
+       find-adjacent-times))
+
 (defn version-1
   ([] (version-1 "puzzle-13"))
   ([name]
